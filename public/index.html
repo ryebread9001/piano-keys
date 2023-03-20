@@ -1,0 +1,129 @@
+<style>
+	body {
+		background-image: linear-gradient(rgba(0, 0, 0, 0.40), rgba(0, 0, 0, 0.40)), url("https://static.vecteezy.com/system/resources/previews/007/841/571/non_2x/cork-pin-board-high-resolution-background-photo.jpg");
+		/*background-color: rgb(114, 89, 71);*/
+		
+		height: 100%;
+		background-attachment: fixed;
+		background-position: center;
+		background-repeat: no-repeat;
+		/*background-size: contain;*/
+		background-size: cover; 
+		margin:20px;
+		height:30vh;
+		display: flex;
+		align-items: center;
+	}
+
+	#menu-items {
+		color: white;
+		font-size: clamp(2rem,4vw,4rem);
+		font-family: "Georgia", serif;
+		display: block;
+		margin-left: clamp(1rem, 10vw, 18rem);
+		margin:20px;
+	}
+
+	.button {
+		
+		background-color: rgb(34, 32, 25);
+		border: none;
+		color: white;
+		padding: 15px 32px;
+		font-size: clamp(2rem, 4vw, 4rem);
+		font-family: "Georgia", serif;
+		text-align: center;
+		text-decoration: none;
+		display: block;
+		margin: 10px;
+		font-size:16px;
+
+	}
+
+	.button:hover {
+		opacity:0.8;
+		background-color: rgb(55, 50, 50);
+		box-shadow: inset 1px 12px 10px 1px rgba(0,0,10,.2);
+	}
+
+
+	p {
+		color: black;
+		font-size: clamp(0.5rem,1vw,1rem);
+		font-family: "Georgia", serif;
+		display: block;
+		margin-left: clamp(6rem, 10vw, 18rem);
+		margin:20px;
+		text-align:center;
+	}
+
+	h3 {
+		color: black;
+		font-size: clamp(0.5rem,1vw,1rem);
+		font-family: "Georgia", serif;
+		display: block;
+		margin-left: clamp(6rem, 10vw, 18rem);
+		margin:20px;
+		text-align:left;
+	}
+
+	#game {
+		
+	}
+
+	#chat {
+		
+		
+	}
+
+	.post {
+		position: absolute;
+		z-index: 9;
+		background:  linear-gradient(180deg, rgba(235,218,150,1) 90%, rgba(187,173,117,1) 100%);
+		border: none;
+		text-align: center;
+	}
+
+	.postheader {
+		padding: 10px;
+		cursor: move;
+		z-index: 10;
+		background-color: rgba(235,218,150,1);
+		color: #fff;
+	}
+
+	#chat-box
+	{
+		border: 5px solid white; 
+		-webkit-box-shadow: 
+		inset 0 0 8px  rgba(0,0,0,0.1),
+				0 0 16px rgba(0,0,0,0.1); 
+		-moz-box-shadow: 
+		inset 0 0 8px  rgba(0,0,0,0.1),
+				0 0 16px rgba(0,0,0,0.1); 
+		box-shadow: 
+		inset 0 0 8px  rgba(0,0,0,0.1),
+				0 0 16px rgba(0,0,0,0.1); 
+		padding: 15px;
+		background: rgba(255,255,255,0.5);
+		margin: 0 0 10px 0;
+	}
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"></script>
+<script src="sketch.js"></script>
+<div id="game">
+	<div id="menu">
+		<div id="menu-items">
+			<input type="text" id="chat-box" name="name" required
+       minlength="1" maxlength="80" size="45" placeholder="type your note here...">
+	   		<input id="submit-button" onclick="send();" type="submit" value="Send" class="button">
+			
+			<button onclick="clearChats();" class="button">Clear</button>
+		</div>
+	</div>
+	<div id="chat">
+	</div>
+</div>
+
