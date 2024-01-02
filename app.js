@@ -1,26 +1,37 @@
 var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const bodyParser = require('body-parser')
 const sqlite3 = require('sqlite3').verbose();
-
-
+const jumperController = require('./jumperController');
+const path = require('node:path')
 // init sqlite connection
 let db = new sqlite3.Database("/var/database/messages.db", sqlite3.OPEN_READWRITE);
 
 var app = express();
 
+
+
+app.use(express.urlencoded({ extended: true, parameterLimit: 1000000 })) // For Post requests
+app.use(bodyParser.json({ limit: '50mb' })) // support json encoded bodies
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 1000000 }))
+app.use(logger('dev'));
+//app.use(express.json());
+//app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, '/static')))
+
 // view engine setup
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
 
 
+app.get("/", (req, res) => {
+  res.render('index', {
+    title: 'lyssie.org'
+  });
+})
 // lyssie.com/test/15 param
 // lyssie.com/test?myqparam=5&othervar=here&yada=hey%20%20nice
 app.get("/send/", (req, res) => {
@@ -34,6 +45,7 @@ app.get("/send/", (req, res) => {
   }
   if (msg.length < 100) db.run("INSERT INTO chats (username, msg, id) VALUES ( ?1, ?2, ?3 )", {1: username, 2: msg, 3: id});
   res.send("sent message");
+
 })
 
 app.get("/chat", (req, res) => {
@@ -44,35 +56,25 @@ app.get("/chat", (req, res) => {
 
 app.get("/clear", (req, res) => {
   db.run("DELETE FROM chats");
-  res.send("cleared messages");
+  res.status(200).send("cleared messages");
 })
 
-// app.get("/submit/", (req, res) => {
-//   let data = req.query.score;
-//   let username = req.query.username;
-//   db.run("INSERT INTO scores (username, score) VALUES ( ?1, ?2)", {1: username, 2: data});
-  
-//   res.send("HELLO TEST" + data);
-// });
+app.get('/breakroom', (req, res) => res.render('jumper'))
+app.post('/jumper-score', jumperController.postScore)
+app.get('/jumper-score', jumperController.getScore)
 
-// app.get("/scores", (req, res) => {
-//   db.all("SELECT * FROM scores ORDER BY score DESC LIMIT 10", (err, rows) => {
-//     res.json(rows);
-//   });
-// })
-
-
+app.get('/music', (req, res) => res.render('music'))
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
- // render the error page
+app.use((err, req, res, next) => {
+  res.locals.error = err;
   const status = err.status || 500;
-  res.status(status).send("error:", err);
-  
+  res.status(status);
+  res.render('error');
 });
 
 app.listen(3000, function(err){
